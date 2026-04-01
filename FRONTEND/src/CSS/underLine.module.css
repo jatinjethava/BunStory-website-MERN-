@@ -1,0 +1,13 @@
+.underLine::after {
+    display: block;
+    content: "";
+    width: 0%;
+    height: 2px;
+    margin: 0 auto;
+    background-color: rgba(234, 14, 14, 0.639);
+    transition: width 0.3s;
+}
+
+.underLine:hover::after {
+    width: 100%;
+}
