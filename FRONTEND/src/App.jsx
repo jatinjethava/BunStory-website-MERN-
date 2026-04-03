@@ -5,11 +5,12 @@ import { ToastContainer } from "react-toastify";
 import { Routes, Route } from 'react-router-dom'
 import UserLayout from './Layouts/UserLayout'
 import Home from './Pages/Home/Home'
-import About from './Pages/About/About'
-import Contact from './Pages/Burger/AddBurger'
+import ShowBurger from './Pages/ShowBurger/ShowBurger'
+import AddBurger from './Pages/Burger/AddBurger'
 import './App.css'
 import SignUp from './Components/SignUp'
 import Login from './Components/Login'
+import Blog from './Pages/Blog/Blog';
 
 function App() {
 
@@ -24,8 +25,10 @@ function App() {
 
         <Route element={<UserLayout />}>
           <Route path='/' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/addburger' element={<Contact />} />
+          <Route path='/addburger' element={<AddBurger />} />
+          <Route path='/addburger/:id' element={<AddBurger />} />
+          <Route path='/burgerlist' element={<ShowBurger />} />
+          <Route path='/blog' element={<Blog />} />
         </Route>
 
       </Routes>

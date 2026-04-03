@@ -7,7 +7,7 @@ const Navbar = () => {
 
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    console.log(isLoggedIn);
+    // console.log(isLoggedIn);
 
     const isLogin = () => {
         localStorage.removeItem("token");
@@ -18,8 +18,8 @@ const Navbar = () => {
 
     return (
         <>
-            <div className='m-3 flex justify-center items-center rounded-lg shadow-[0_4px_10px_1px_rgba(0,0,0,0.25)]'>
-                <h1 className='mx-5 my-2 uppercase'>
+            <div className='m-3 flex justify-center items-center rounded-lg'>
+                <h1 className='mx-10 uppercase'>
                     <Hamburger
                         size={40}
                         className='text-red-500 drop-shadow-[3px_3px_5px_rgba(0,0,0,0.2)]'
@@ -34,11 +34,11 @@ const Navbar = () => {
                         <Link to="/" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Home
                         </Link>
-                        <Link to="/about" className={`${custom.underLine} hover:text-red-500 duration-200`}>
-                            About
-                        </Link>
                         <Link to="/addBurger" className={`${custom.underLine} hover:text-red-500 duration-200`}>
-                            Add Details
+                            Add Burger
+                        </Link>
+                        <Link to="/burgerlist" className={`${custom.underLine} hover:text-red-500 duration-200`}>
+                            Burger List
                         </Link>
                         <Link to="/blog" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Blog
@@ -51,7 +51,7 @@ const Navbar = () => {
                 <div>
 
                 </div>
-                <div className="mx-5 flex gap-10">
+                <div className="mx-10 flex gap-10">
                     {/* <a href="#" className='border border-red-500 px-4 py-1.5 rounded-lg hover:bg-red-500 duration-200 hover:text-white'>SignUp</a> */}
                     <button type='button' onClick={isLogin} href="#" className='border border-red-500 px-4 py-1.5 rounded-lg hover:bg-red-500 duration-200 hover:text-white'>
                         {isLoggedIn ? "Login" : "Logout"}

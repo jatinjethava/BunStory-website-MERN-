@@ -1,9 +1,11 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-const AddBurger = () => {
+const AddBurger = ({ props }) => {
 
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         name: "",
         description: "",
@@ -43,6 +45,55 @@ const AddBurger = () => {
             setForm({ ...form, [key]: [...arr, value] });
         }
     }
+
+    const [isUpdate, setIsUpdate] = useState(false);
+    const { id } = useParams();
+
+    useEffect(() => {
+        if (id) {
+            setIsUpdate(true);
+        } else {
+            setIsUpdate(false);
+        }
+    }, [id]);
+
+
+    useEffect(() => {
+        if (id && isUpdate) {
+            const fetchBurgerData = async () => {
+                try {
+                    const token = localStorage.getItem("token");
+                    const result = await axios.get(`http://localhost:8100/api/burgers/getone_burger/${id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
+                    if (result.data.success) {
+                        setForm({
+                            name: result.data.data.name || "",
+                            description: result.data.data.description || "",
+                            patty: result.data.data.patty || "",
+                            bun: result.data.data.bun || "",
+                            size: result.data.data.size || "Single",
+                            spice: result.data.data.spice || "Mild",
+                            toppings: result.data.data.toppings || [],
+                            sauces: result.data.data.sauces || [],
+                            price: result.data.data.price || "",
+                            calories: result.data.data.calories || "",
+                            available: result.data.data.available ?? true,
+                            featured: result.data.data.featured ?? false,
+                            image: result.data.data.image || null,
+                        });
+                    }
+                } catch (error) {
+                    const msg = error.response?.data?.message || "Failed to fetch burger data";
+                    toast.error(msg);
+                }
+            };
+            fetchBurgerData();
+        }
+    }, [id, isUpdate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -122,52 +173,101 @@ const AddBurger = () => {
             return;
         }
 
-        try {
-            const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-            if (!token) {
-                toast.error("Please login first to add a burger");
-                return;
-            }
+        if (!token) {
+            toast.error("Please login first to add a burger");
+            return;
+        }
 
-            const result = await axios.post("http://localhost:8100/api/burgers/create", form, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        if (!isUpdate) {
+            try {
+
+                const result = await axios.post("http://localhost:8100/api/burgers/create", form, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (result.data.success === false) {
+                    toast.error(result.data.message || "Failed to add burger. Please try again.");
+                    return;
                 }
-            });
 
-            if (result.data.success === false) {
-                toast.error(result.data.message || "Failed to add burger. Please try again.");
-                return;
+                toast.success("Burger added successfully!", {
+                    autoClose: 1500
+                });
+                setTimeout(() => {
+                    navigate('/burgerlist');
+                }, 2000);
+
+                setForm({
+                    name: "",
+                    description: "",
+                    patty: "",
+                    bun: "",
+                    size: "Single",
+                    spice: "Mild",
+                    toppings: [],
+                    sauces: [],
+                    price: "",
+                    calories: "",
+                    available: true,
+                    featured: false,
+                    image: null,
+                });
+
+            } catch (error) {
+                const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message
+                    : "Failed to add burger. Please try again.";
+                toast.error(msg, { autoClose: 1500 });
             }
+        } else {
 
-            toast.success("Burger added successfully!", {
-                autoClose: 1500
-            });
+            try {
 
-            setForm({
-                name: "",
-                description: "",
-                patty: "",
-                bun: "",
-                size: "Single",
-                spice: "Mild",
-                toppings: [],
-                sauces: [],
-                price: "",
-                calories: "",
-                available: true,
-                featured: false,
-                image: null,
-            });
+                const result = await axios.put(`http://localhost:8100/api/burgers/update_burger/${id}`, form, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-        } catch (error) {
-            const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message
-                : "Failed to add burger. Please try again.";
-            toast.error(msg, { autoClose: 1500 });
+                if (result.data.success === false) {
+                    toast.error(result.data.message || "Failed to update burger");
+                    return;
+                }
+
+                if (result.status === 200) {
+                    toast.success("Updated Successfully", {
+                        autoClose: 1500
+                    })
+                    setTimeout(() => {
+                        navigate("/burgerlist");
+                    }, 2000);
+                }
+
+            } catch (error) {
+                const msg = error.response?.data?.message || "Failed to update burger. Please try again.";
+                toast.error(msg, { autoClose: 1500 });
+            }
         }
 
     }
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            toast.error("Please Login First After Access This Site. ", {
+                autoClose: 1000,
+            });
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+            return;
+        }
+    });
+
 
     return (
         <div className="min-h-screen bg-white py-10 px-4">
@@ -177,8 +277,14 @@ const AddBurger = () => {
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center text-xl shadow-md">🍔</div>
                     <div>
-                        <h1 className="text-2xl font-bold text-zinc-800 tracking-tight">Add New Burger</h1>
-                        <p className="text-xs text-zinc-400">Fill in the details to add to your menu</p>
+                        <h1 className="text-2xl font-bold text-zinc-800 tracking-tight">
+                            {!isUpdate ? "Add New Burger" : "Update Burger"}
+                        </h1>
+                        <p className="text-xs text-zinc-400">
+                            Fill in the details to
+                            {!isUpdate ? "Add " : "Update "}
+                            to your menu
+                        </p>
                     </div>
                 </div>
 
@@ -406,7 +512,9 @@ const AddBurger = () => {
                         type="submit"
                         className="w-full bg-zinc-900 hover:bg-zinc-700 text-white font-semibold rounded-2xl py-3.5 text-sm transition-all active:scale-95 shadow-lg shadow-zinc-900/20 flex items-center justify-center gap-2"
                     >
-                        <span>Add to Menu</span>
+                        <span>
+                            {!isUpdate ? "Add to Menu" : "Update Menu"}
+                        </span>
                         <span>🍔</span>
                     </button>
                 </form>

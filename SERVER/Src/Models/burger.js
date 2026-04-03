@@ -30,7 +30,7 @@ const burgerSchema = new mongoose.Schema({
 
     spice: {
         type: String,
-        enum: ["Mild", "Medium", "Hot"],
+        enum: ["Mild", "Medium", "Hot", "Extra Hot"],
         default: "Mild",
     },
 
