@@ -1,10 +1,13 @@
 const BURGER = require('../Models/burger');
 
 // Create a new burger
-
 const createBurger = async (req, res) => {
     try {
-        const { name, description, patty, bun, size, spice, toppings, sauces, price, calories } = req.body;
+        const { name, description, patty, bun, size, spice, price, calories, toppings, sauces } = req.body;
+        const image = req.file ? req.file.filename : null;
+
+        
+
         if (!name || !description || !patty || !bun || !price) {
             return res.status(400).json({ message: 'Name, description, patty, bun and price are required' });
         }
@@ -16,10 +19,11 @@ const createBurger = async (req, res) => {
             bun,
             size,
             spice,
-            toppings,
-            sauces,
+            toppings: Array.isArray(toppings) ? toppings : [toppings].filter(Boolean),
+            sauces: Array.isArray(sauces) ? sauces : [sauces].filter(Boolean),
             price,
             calories,
+            image
         });
         await newBurger.save();
 
@@ -61,7 +65,8 @@ const getAllBurger = async (req, res) => {
 const updateBurger = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, patty, bun, size, spice, toppings, sauces, price, calories } = req.body;
+        let { name, description, patty, bun, size, spice, toppings, sauces, price, calories } = req.body;
+        let image = undefined;
 
         if (!name || !description || !patty || !bun || !size || !spice || !price || !calories) {
             return res.status(400).json({
@@ -70,18 +75,25 @@ const updateBurger = async (req, res) => {
             });
         }
 
-        const updatedBurger = await BURGER.findByIdAndUpdate(id, {
+        if (req.file) {
+            image = req.file.filename;
+        }
+
+        const updateData = {
             name,
             description,
             patty,
             bun,
             size,
             spice,
-            toppings,
-            sauces,
+            toppings: Array.isArray(toppings) ? toppings : [toppings].filter(Boolean),
+            sauces: Array.isArray(sauces) ? sauces : [sauces].filter(Boolean),
             price,
             calories
-        }, { returnDocument: "after", runValidators: true });
+        };
+        if (image) updateData.image = image;
+
+        const updatedBurger = await BURGER.findByIdAndUpdate(id, updateData, { returnDocument: "after", runValidators: true });
 
         if (!updatedBurger) {
             return res.status(404).json({

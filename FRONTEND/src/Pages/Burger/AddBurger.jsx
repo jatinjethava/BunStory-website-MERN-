@@ -19,7 +19,7 @@ const AddBurger = ({ props }) => {
         calories: "",
         available: true,
         featured: false,
-        image: null,
+        image: null
     });
 
     const [focused, setFocused] = useState("");
@@ -57,7 +57,6 @@ const AddBurger = ({ props }) => {
         }
     }, [id]);
 
-
     useEffect(() => {
         if (id && isUpdate) {
             const fetchBurgerData = async () => {
@@ -81,9 +80,9 @@ const AddBurger = ({ props }) => {
                             sauces: result.data.data.sauces || [],
                             price: result.data.data.price || "",
                             calories: result.data.data.calories || "",
-                            available: result.data.data.available ?? true,
-                            featured: result.data.data.featured ?? false,
                             image: result.data.data.image || null,
+                            available: result.data.data.available ?? true,
+                            featured: result.data.data.featured ?? false
                         });
                     }
                 } catch (error) {
@@ -183,7 +182,23 @@ const AddBurger = ({ props }) => {
         if (!isUpdate) {
             try {
 
-                const result = await axios.post("http://localhost:8100/api/burgers/create", form, {
+                const formData = new FormData();
+                formData.append('name', form.name);
+                formData.append('description', form.description);
+                formData.append('patty', form.patty);
+                formData.append('bun', form.bun);
+                formData.append('size', form.size);
+                formData.append('spice', form.spice);
+                formData.append('price', form.price);
+                formData.append('calories', form.calories);
+                formData.append('available', form.available);
+                formData.append('featured', form.featured);
+                // Append each topping and sauce as separate entries
+                form.toppings.forEach(topping => formData.append('toppings', topping));
+                form.sauces.forEach(sauce => formData.append('sauces', sauce));
+                if (form.image) formData.append('image', form.image);
+
+                const result = await axios.post("http://localhost:8100/api/burgers/create", formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -213,8 +228,7 @@ const AddBurger = ({ props }) => {
                     price: "",
                     calories: "",
                     available: true,
-                    featured: false,
-                    image: null,
+                    featured: false
                 });
 
             } catch (error) {
@@ -226,7 +240,25 @@ const AddBurger = ({ props }) => {
 
             try {
 
-                const result = await axios.put(`http://localhost:8100/api/burgers/update_burger/${id}`, form, {
+                const formData = new FormData();
+                formData.append('name', form.name);
+                formData.append('description', form.description);
+                formData.append('patty', form.patty);
+                formData.append('bun', form.bun);
+                formData.append('size', form.size);
+                formData.append('spice', form.spice);
+                formData.append('price', form.price);
+                formData.append('calories', form.calories);
+                formData.append('available', form.available);
+                formData.append('featured', form.featured);
+                // Append each topping and sauce as separate entries
+                form.toppings.forEach(topping => formData.append('toppings', topping));
+                form.sauces.forEach(sauce => formData.append('sauces', sauce));
+                if (form.image && form.image instanceof File) {
+                    formData.append('image', form.image);
+                }
+
+                const result = await axios.put(`http://localhost:8100/api/burgers/update_burger/${id}`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -271,252 +303,273 @@ const AddBurger = ({ props }) => {
 
     return (
         <div className="min-h-screen bg-white py-10 px-4">
-            <div className="max-w-2xl mx-auto space-y-6">
+            <div className="w-full mx-auto space-y-6">
 
-                {/* Header */}
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center text-xl shadow-md">🍔</div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-zinc-800 tracking-tight">
-                            {!isUpdate ? "Add New Burger" : "Update Burger"}
-                        </h1>
-                        <p className="text-xs text-zinc-400">
-                            Fill in the details to
-                            {!isUpdate ? "Add " : "Update "}
-                            to your menu
-                        </p>
-                    </div>
-                </div>
+                <form onSubmit={handleSubmit} className=" space-y-5">
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className='flex justify-center items-start gap-10'>
 
-                    {/* Basic Info */}
-                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-4">
-                        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Basic Info</p>
-
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-zinc-500">Burger Name *</label>
-                            <input
-                                value={form.name}
-                                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                onFocus={() => setFocused("name")}
-                                onBlur={() => setFocused("")}
-                                placeholder="e.g. Classic Smash Burger"
-                                className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all ${focused === "name" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
-                            />
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-zinc-500">Description</label>
-                            <textarea
-                                rows={3}
-                                value={form.description}
-                                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                                onFocus={() => setFocused("desc")}
-                                onBlur={() => setFocused("")}
-                                placeholder="Describe the burger — flavors, ingredients, what makes it special..."
-                                className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all resize-none ${focused === "desc" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-medium text-zinc-500">Price (₹) *</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={form.price}
-                                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                                    onFocus={() => setFocused("price")}
-                                    onBlur={() => setFocused("")}
-                                    placeholder="199"
-                                    className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all ${focused === "price" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
-                                />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-medium text-zinc-500">Calories (kcal)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    value={form.calories}
-                                    onChange={(e) => setForm({ ...form, calories: e.target.value })}
-                                    onFocus={() => setFocused("cal")}
-                                    onBlur={() => setFocused("")}
-                                    placeholder="520"
-                                    className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all ${focused === "cal" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Size & Spice */}
-                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-4">
-                        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Size & Heat</p>
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-zinc-500">Size</label>
-                            <div className="flex gap-2">
-                                {SIZES.map((s) => (
-                                    <button
-                                        key={s}
-                                        type="button"
-                                        onClick={() => setForm({ ...form, size: s })}
-                                        className={`flex-1 rounded-xl py-2 text-sm font-medium transition-all ${form.size === s ? "bg-amber-500 text-white shadow-md shadow-amber-200" : "bg-zinc-50 border border-zinc-200 text-zinc-500 hover:border-amber-300"}`}
-                                    >
-                                        {s}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-zinc-500">Spice Level</label>
-                            <div className="flex gap-2">
-                                {SPICE.map((s, i) => {
-                                    const emoji = ["🟢", "🟡", "🔴", "🔥"][i];
-                                    return (
-                                        <button
-                                            key={s}
-                                            type="button"
-                                            onClick={() => setForm({ ...form, spice: s })}
-                                            className={`flex-1 rounded-xl py-2 text-xs font-medium transition-all flex flex-col items-center gap-0.5 ${form.spice === s ? "bg-red-500 text-white shadow-md shadow-red-200" : "bg-zinc-50 border border-zinc-200 text-zinc-500 hover:border-red-300"}`}
-                                        >
-                                            <span className="text-base">{emoji}</span>
-                                            {s}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Patty & Bun */}
-                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-4">
-                        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Patty & Bun</p>
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-zinc-500">Patty Type *</label>
-                            <div className="flex flex-wrap gap-2">
-                                {PATTIES.map((p) => (
-                                    <button
-                                        key={p}
-                                        type="button"
-                                        onClick={() => setForm({ ...form, patty: p })}
-                                        className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${form.patty === p ? "bg-zinc-800 text-white" : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"}`}
-                                    >
-                                        {p}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-zinc-500">Bun Type *</label>
-                            <div className="flex flex-wrap gap-2">
-                                {BUNS.map((b) => (
-                                    <button
-                                        key={b}
-                                        type="button"
-                                        onClick={() => setForm({ ...form, bun: b })}
-                                        className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${form.bun === b ? "bg-amber-500 text-white" : "bg-amber-50 text-amber-700 hover:bg-amber-100"}`}
-                                    >
-                                        {b}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Toppings */}
-                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
-                        <div className="flex items-center justify-between">
-                            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Toppings</p>
-                            {form.toppings.length > 0 && (
-                                <span className="bg-amber-100 text-amber-600 text-xs font-semibold px-2 py-0.5 rounded-full">{form.toppings.length} selected</span>
-                            )}
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {TOPPINGS.map((t) => {
-                                const active = form.toppings.includes(t);
-                                return (
-                                    <button
-                                        key={t}
-                                        type="button"
-                                        onClick={() => toggle("toppings", t)}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${active ? "bg-green-500 border-green-500 text-white shadow-sm shadow-green-200" : "bg-green-50 border-green-100 text-green-700 hover:border-green-300"}`}
-                                    >
-                                        {active ? "✓ " : ""}{t}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Sauces */}
-                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
-                        <div className="flex items-center justify-between">
-                            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Sauces</p>
-                            {form.sauces.length > 0 && (
-                                <span className="bg-red-100 text-red-500 text-xs font-semibold px-2 py-0.5 rounded-full">{form.sauces.length} selected</span>
-                            )}
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                            {SAUCES.map((s) => {
-                                const active = form.sauces.includes(s);
-                                return (
-                                    <button
-                                        key={s}
-                                        type="button"
-                                        onClick={() => toggle("sauces", s)}
-                                        className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${active ? "bg-red-500 border-red-500 text-white shadow-sm shadow-red-200" : "bg-red-50 border-red-100 text-red-700 hover:border-red-300"}`}
-                                    >
-                                        {active ? "✓ " : ""}{s}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Toggles */}
-                    <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
-                        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Availability</p>
-                        {[
-                            { key: "available", label: "Available on Menu", sub: "Customers can order this burger" },
-                            { key: "featured", label: "Featured Burger", sub: "Show in the highlights section" },
-                        ].map(({ key, label, sub }) => (
-                            <div key={key} className="flex items-center justify-between">
+                        <div className="w-150 bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-4">
+                            <div className="max-w-full flex items-center gap-3">
+                                <div className="w-10 h-10 bg-red-500 rounded-2xl flex items-center justify-center text-xl shadow-md">🍔</div>
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-700">{label}</p>
-                                    <p className="text-xs text-zinc-400">{sub}</p>
+                                    <h1 className="text-2xl font-bold text-zinc-800 tracking-tight">
+                                        {!isUpdate ? "Add New Burger" : "Update Burger"}
+                                    </h1>
+                                    <p className="text-xs text-zinc-400">
+                                        Fill in the details to
+                                        {!isUpdate ? " Add " : " Update "}
+                                        to your menu
+                                    </p>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setForm((f) => ({ ...f, [key]: !f[key] }))}
-                                    className={`w-11 h-6 rounded-full transition-all duration-200 relative ${form[key] ? "bg-amber-500" : "bg-zinc-200"}`}
-                                >
-                                    <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ${form[key] ? "left-5" : "left-0.5"}`} />
-                                </button>
                             </div>
-                        ))}
+                            <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Basic Info</p>
+
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-medium text-zinc-500">Burger Name *</label>
+                                <input
+                                    value={form.name}
+                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                    onFocus={() => setFocused("name")}
+                                    onBlur={() => setFocused("")}
+                                    placeholder="e.g. Classic Smash Burger"
+                                    className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all ${focused === "name" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-medium text-zinc-500">Description</label>
+                                <textarea
+                                    rows={3}
+                                    value={form.description}
+                                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                                    onFocus={() => setFocused("desc")}
+                                    onBlur={() => setFocused("")}
+                                    placeholder="Describe the burger — flavors, ingredients, what makes it special..."
+                                    className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all resize-none ${focused === "desc" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-zinc-500">Price (₹) *</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        value={form.price}
+                                        onChange={(e) => setForm({ ...form, price: e.target.value })}
+                                        onFocus={() => setFocused("price")}
+                                        onBlur={() => setFocused("")}
+                                        placeholder="199"
+                                        className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all ${focused === "price" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-zinc-500">Calories (kcal)</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        value={form.calories}
+                                        onChange={(e) => setForm({ ...form, calories: e.target.value })}
+                                        onFocus={() => setFocused("cal")}
+                                        onBlur={() => setFocused("")}
+                                        placeholder="520"
+                                        className={`w-full rounded-xl border bg-zinc-50 px-4 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none transition-all ${focused === "cal" ? "border-amber-400 ring-2 ring-amber-100" : "border-zinc-200"}`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-medium text-zinc-500">Burger Image</label>
+                                <input
+                                    type="file"
+                                    name='image'
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        // console.log(file)
+                                        if (file) setForm({ ...form, image: file });
+                                    }}
+                                    className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-500 file:rounded-lg file:border-0 file:bg-amber-500 file:text-white file:text-xs file:font-medium file:px-3 file:py-1.5 hover:file:bg-amber-600"
+                                />
+                            </div>
+                        </div>
+
+                        <div className='w-200 flex flex-col justify-center gap-10'>
+                            {/* Size & Spice */}
+                            <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-4">
+                                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Size & Heat</p>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-zinc-500">Size</label>
+                                    <div className="flex gap-2">
+                                        {SIZES.map((s) => (
+                                            <button
+                                                key={s}
+                                                type="button"
+                                                onClick={() => setForm({ ...form, size: s })}
+                                                className={`flex-1 rounded-xl py-2 text-sm font-medium transition-all ${form.size === s ? "bg-amber-500 text-white shadow-md shadow-amber-200" : "bg-zinc-50 border border-zinc-200 text-zinc-500 hover:border-amber-300"}`}
+                                            >
+                                                {s}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-zinc-500">Spice Level</label>
+                                    <div className="flex gap-2">
+                                        {SPICE.map((s, i) => {
+                                            const emoji = ["🟢", "🟡", "🔴", "🔥"][i];
+                                            return (
+                                                <button
+                                                    key={s}
+                                                    type="button"
+                                                    onClick={() => setForm({ ...form, spice: s })}
+                                                    className={`flex-1 rounded-xl py-2 text-xs font-medium transition-all flex flex-col items-center gap-0.5 ${form.spice === s ? "bg-red-500 text-white shadow-md shadow-red-200" : "bg-zinc-50 border border-zinc-200 text-zinc-500 hover:border-red-300"}`}
+                                                >
+                                                    <span className="text-base">{emoji}</span>
+                                                    {s}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Patty & Bun */}
+                            <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-4">
+                                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Patty & Bun</p>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-zinc-500">Patty Type *</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {PATTIES.map((p) => (
+                                            <button
+                                                key={p}
+                                                type="button"
+                                                onClick={() => setForm({ ...form, patty: p })}
+                                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${form.patty === p ? "bg-zinc-800 text-white" : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"}`}
+                                            >
+                                                {p}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-zinc-500">Bun Type *</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {BUNS.map((b) => (
+                                            <button
+                                                key={b}
+                                                type="button"
+                                                onClick={() => setForm({ ...form, bun: b })}
+                                                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${form.bun === b ? "bg-amber-500 text-white" : "bg-amber-50 text-amber-700 hover:bg-amber-100"}`}
+                                            >
+                                                {b}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Summary pill */}
-                    {(form.name || form.price) && (
-                        <div className="bg-amber-500 rounded-2xl p-4 flex items-center justify-between">
-                            <div>
-                                <p className="text-white font-semibold text-sm">{form.name || "Unnamed Burger"}</p>
-                                <p className="text-amber-100 text-xs">{form.size} · {form.patty || "—"} patty · {form.toppings.length} toppings</p>
+                    <div className='w-full m-auto flex flex-col justify-center items-end gap-5'>
+                        <div className='w-200 mx-5 flex flex-col justify-center gap-5'>
+                            {/* Toppings */}
+                            <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Toppings</p>
+                                    {form.toppings.length > 0 && (
+                                        <span className="bg-amber-100 text-amber-600 text-xs font-semibold px-2 py-0.5 rounded-full">{form.toppings.length} selected</span>
+                                    )}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {TOPPINGS.map((t) => {
+                                        const active = form.toppings.includes(t);
+                                        return (
+                                            <button
+                                                key={t}
+                                                type="button"
+                                                onClick={() => toggle("toppings", t)}
+                                                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${active ? "bg-green-500 border-green-500 text-white shadow-sm shadow-green-200" : "bg-green-50 border-green-100 text-green-700 hover:border-green-300"}`}
+                                            >
+                                                {active ? "✓ " : ""}{t}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                            <p className="text-white font-bold text-lg">{form.price ? `₹${form.price}` : "—"}</p>
-                        </div>
-                    )}
 
-                    {/* Submit */}
-                    <button
-                        type="submit"
-                        className="w-full bg-zinc-900 hover:bg-zinc-700 text-white font-semibold rounded-2xl py-3.5 text-sm transition-all active:scale-95 shadow-lg shadow-zinc-900/20 flex items-center justify-center gap-2"
-                    >
-                        <span>
-                            {!isUpdate ? "Add to Menu" : "Update Menu"}
-                        </span>
-                        <span>🍔</span>
-                    </button>
+                            {/* Sauces */}
+                            <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Sauces</p>
+                                    {form.sauces.length > 0 && (
+                                        <span className="bg-red-100 text-red-500 text-xs font-semibold px-2 py-0.5 rounded-full">{form.sauces.length} selected</span>
+                                    )}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {SAUCES.map((s) => {
+                                        const active = form.sauces.includes(s);
+                                        return (
+                                            <button
+                                                key={s}
+                                                type="button"
+                                                onClick={() => toggle("sauces", s)}
+                                                className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${active ? "bg-red-500 border-red-500 text-white shadow-sm shadow-red-200" : "bg-red-50 border-red-100 text-red-700 hover:border-red-300"}`}
+                                            >
+                                                {active ? "✓ " : ""}{s}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Toggles */}
+                            <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
+                                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Availability</p>
+                                {[
+                                    { key: "available", label: "Available on Menu", sub: "Customers can order this burger" },
+                                    { key: "featured", label: "Featured Burger", sub: "Show in the highlights section" },
+                                ].map(({ key, label, sub }) => (
+                                    <div key={key} className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm font-medium text-zinc-700">{label}</p>
+                                            <p className="text-xs text-zinc-400">{sub}</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setForm((f) => ({ ...f, [key]: !f[key] }))}
+                                            className={`w-11 h-6 rounded-full transition-all duration-200 relative ${form[key] ? "bg-amber-500" : "bg-zinc-200"}`}
+                                        >
+                                            <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ${form[key] ? "left-5" : "left-0.5"}`} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Summary pill */}
+                            {(form.name || form.price) && (
+                                <div className="bg-amber-500 rounded-2xl p-4 flex items-center justify-between">
+                                    <div>
+                                        <p className="text-white font-semibold text-sm">{form.name || "Unnamed Burger"}</p>
+                                        <p className="text-amber-100 text-xs">{form.size} · {form.patty || "—"} patty · {form.toppings.length} toppings</p>
+                                    </div>
+                                    <p className="text-white font-bold text-lg">{form.price ? `₹${form.price}` : "—"}</p>
+                                </div>
+                            )}
+
+                            {/* Submit */}
+                            <button
+                                type="submit"
+                                className="w-full bg-zinc-900 hover:bg-zinc-700 text-white font-semibold rounded-2xl py-3.5 text-sm transition-all active:scale-95 shadow-lg shadow-zinc-900/20 flex items-center justify-center gap-2"
+                            >
+                                <span>
+                                    {!isUpdate ? "Add to Menu" : "Update Menu"}
+                                </span>
+                                <span>🍔</span>
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

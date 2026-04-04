@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const Connection = require('./Src/Config/Connection');
 const userRoute = require('./Src/Routes/user.Route');
@@ -14,6 +15,7 @@ Connection();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "Src/uploads")));
 app.use('/api/users', userRoute);
 app.use('/api/burgers', burgerRoute);
 

@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const burgerSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        trim: true,
+        required: true
     },
 
     description: {
@@ -53,6 +52,10 @@ const burgerSchema = new mongoose.Schema({
 
     calories: {
         type: Number,
+    },
+
+    image: {
+        type: String
     },
 
     available: {

@@ -10,15 +10,17 @@ const ShowBurger = () => {
 
     const token = localStorage.getItem("token");
 
-    if (!token) {
-        toast.error("Login First After Seen Burger Details", {
-            autoClose: 1500
-        })
-        setTimeout(() => {
-            navigate("/login");
-        }, 2000);
-        return;
-    }
+    useEffect(() => {
+        if (!token) {
+            toast.error("Login First After Seen Burger Details", {
+                autoClose: 1500
+            })
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+            return;
+        }
+    }, [token, navigate]);
 
     const getAllBurger = async () => {
         try {
@@ -88,53 +90,65 @@ const ShowBurger = () => {
                     burger.map((item) => (
                         <div
                             key={item._id}
+                            className='flex justify-center items-center'
                             style={{
                                 fontFamily: "'DM Sans', sans-serif",
                                 background: "white",
                                 border: "0.5px solid #e5e7eb",
                                 borderRadius: "12px",
                                 overflow: "hidden",
-                                maxWidth: "360px",
+                                maxWidth: "900px",
                                 width: "100%",
                                 boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
                             }}
                         >
-                            {/* Header */}
-                            <div style={{ padding: "20px 20px 16px" }} className='bg-gray-200'>
-                                <span
-                                    className='text-gray-700'
-                                    style={{
-                                        display: "inline-block",
-                                        background: "#fff",
-                                        fontSize: "11px",
-                                        fontWeight: 500,
-                                        padding: "3px 10px",
-                                        borderRadius: "20px",
-                                        letterSpacing: "0.05em",
-                                        marginBottom: "10px",
-                                        textTransform: "uppercase",
-                                    }}
-                                >
-                                    Specialty
-                                </span>
-                                <h1
-                                    className='text-gray-600'
-                                    style={{
-                                        fontFamily: "'Playfair Display', Georgia, serif",
-                                        fontSize: "26px",
-                                        fontWeight: 600,
-                                        margin: "0 0 6px",
-                                        lineHeight: 1.2,
-                                    }}
-                                >
-                                    {item.name}
-                                </h1>
-                                <p style={{ fontSize: "13px", margin: 0, fontStyle: "italic" }} className='text-gray-500'>
-                                    "Tasty {item.name}."
-                                </p>
+
+                            <div className='w-[50%] h-100 flex flex-col justify-center gap-5 m-3'>
+                                <div className='h-80'>
+                                    <img
+                                        src={`http://localhost:8100/uploads/${item.image}`}
+                                        alt="burger"
+                                        className='h-[100%] rounded-lg object-cover'
+                                    />
+                                </div>
+
+                                {/* Header */}
+                                <div style={{ padding: "20px 20px 16px" }} className='rounded-lg bg-gray-200'>
+                                    <span
+                                        className='text-gray-700'
+                                        style={{
+                                            display: "inline-block",
+                                            background: "#fff",
+                                            fontSize: "11px",
+                                            fontWeight: 500,
+                                            padding: "3px 10px",
+                                            borderRadius: "20px",
+                                            letterSpacing: "0.05em",
+                                            marginBottom: "10px",
+                                            textTransform: "uppercase",
+                                        }}
+                                    >
+                                        Specialty
+                                    </span>
+                                    <h1
+                                        className='text-gray-600'
+                                        style={{
+                                            fontFamily: "'Playfair Display', Georgia, serif",
+                                            fontSize: "26px",
+                                            fontWeight: 600,
+                                            margin: "0 0 6px",
+                                            lineHeight: 1.2,
+                                        }}
+                                    >
+                                        {item.name}
+                                    </h1>
+                                    <p style={{ fontSize: "13px", margin: 0, fontStyle: "italic" }} className='text-gray-500'>
+                                        " {item.description}"
+                                    </p>
+                                </div>
                             </div>
 
-                            <div style={{ padding: "18px 20px" }}>
+                            <div className='w-[50%]' style={{ padding: "18px 20px" }}>
 
                                 <p style={{ fontSize: "11px", fontWeight: 500, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 10px" }}>
                                     Details

@@ -9,7 +9,7 @@ import "swiper/css/pagination";
 const Home = () => {
     return (
         <>
-            <div className='w-[96%] m-auto'>
+            <div className='w-[96%] m-auto mb-20'>
                 <Swiper
                     modules={[Autoplay, Navigation, Pagination]}
                     autoplay={{ delay: 3000 }}
@@ -22,7 +22,7 @@ const Home = () => {
                         <SwiperSlide key={i}>
                             <img
                                 src={img}
-                                className="w-full h-[600px] object-cover"
+                                className="w-full h-150 object-cover"
                             />
                         </SwiperSlide>
                     ))}
