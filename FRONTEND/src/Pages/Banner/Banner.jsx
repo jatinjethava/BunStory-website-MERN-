@@ -109,6 +109,9 @@ const Banner = () => {
                 autoClose: 1500
             });
 
+            fetchBanner();
+            window.location.reload();
+
         } catch (error) {
             const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message : "Failed To Add Banner";
             toast.error(msg, {
@@ -116,6 +119,34 @@ const Banner = () => {
             })
         }
 
+    }
+
+    const DeleteBanner = async (id) => {
+        try {
+            const result = await axios.delete(`http://localhost:8100/api/home/deleteHome/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            if (!result) {
+                return toast.error("Banner Not Deleted", {
+                    autoClose: 1500
+                })
+            }
+
+            toast.success("Banner Deleted Successfully", {
+                autoClose: 1500
+            })
+
+            fetchBanner();
+
+        } catch (error) {
+            const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message : "Failed To Delete Banner";
+            toast.error(msg, {
+                autoClose: 1500
+            })
+        }
     }
 
     return (
@@ -184,6 +215,11 @@ const Banner = () => {
                                     </div>
                                     <div>
                                         "{item.content}"
+                                    </div>
+                                    <div>
+                                        <button type='button' onClick={(e) => DeleteBanner(item._id)} className='mt-2 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 hover:scale-105 duration-150'>
+                                            Delete Banner
+                                        </button>
                                     </div>
                                 </div>
                                 <div className='w-150 flex justify-center items-center'>

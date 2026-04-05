@@ -55,7 +55,26 @@ const getHome = async (req, res) => {
     }
 }
 
+const deleteBurger = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const Delete = await HOME.findByIdAndDelete(id);
+
+        if (!Delete) {
+            return res.status(404).json({ success: false, message: "Banner Not Found !" });
+        }
+
+        return res.status(200).json({ success: true, message: "Banner Deleted Successfully !" });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, message: "Something Wents wrong !" });
+    }
+}
+
 module.exports = {
     add_Home,
     getHome,
+    deleteBurger
 }
