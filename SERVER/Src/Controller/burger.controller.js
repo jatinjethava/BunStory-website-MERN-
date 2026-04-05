@@ -6,8 +6,6 @@ const createBurger = async (req, res) => {
         const { name, description, patty, bun, size, spice, price, calories, toppings, sauces } = req.body;
         const image = req.file ? req.file.filename : null;
 
-        
-
         if (!name || !description || !patty || !bun || !price) {
             return res.status(400).json({ message: 'Name, description, patty, bun and price are required' });
         }

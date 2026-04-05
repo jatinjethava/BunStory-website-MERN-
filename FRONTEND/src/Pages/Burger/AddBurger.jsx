@@ -475,7 +475,7 @@ const AddBurger = ({ props }) => {
                     <div className='w-full m-auto flex flex-col justify-center items-end gap-5'>
                         <div className='w-200 mx-5 flex flex-col justify-center gap-5'>
                             {/* Toppings */}
-                            <div className="bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
+                            <div className="mt-[-30px] bg-white rounded-3xl p-5 shadow-sm border border-amber-100 space-y-3">
                                 <div className="flex items-center justify-between">
                                     <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Toppings</p>
                                     {form.toppings.length > 0 && (

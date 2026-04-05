@@ -1,6 +1,6 @@
 const { createBurger, getAllBurger, getBurgerById, updateBurger, deleteBurger } = require('../Controller/burger.controller');
 const authMiddleware = require('../Middleware/auth');
-const upload = require("../Middleware/multer");
+const { upload } = require("../Middleware/multer");
 
 const express = require('express');
 const router = express.Router();
