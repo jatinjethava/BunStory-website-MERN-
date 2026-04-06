@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import './Blog.css'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Blog = () => {
+
+    const navigate = useNavigate();
+    const [blogBanner, setBlogBanner] = useState([]);
     const [burgers, setBurgers] = useState([]);
     const [featuredBurger, setFeaturedBurger] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Sample burger data
     useEffect(() => {
         const sampleBurgers = [
             {
@@ -56,6 +61,40 @@ const Blog = () => {
         setLoading(false);
     }, []);
 
+    const token = localStorage.getItem("token");
+    useEffect(() => {
+        if (!token) {
+            navigate('/admin.login')
+        }
+        fetchBlogBanner();
+    })
+
+    const fetchBlogBanner = async () => {
+        try {
+            const result = await axios.get(`http://localhost:8100/api/blog/getBlogBanner`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            // console.log(result.data.data)
+
+            if (!result) {
+                return toast.error("Not Data Fetched", {
+                    autoClose: 1500
+                })
+            }
+
+            setBlogBanner(result.data.data);
+
+        } catch (error) {
+            const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message : "Failed to fetch Blog Banner";
+            toast.error(msg, {
+                autoClose: 1500
+            })
+        }
+    }
+
     if (loading) {
         return (
             <div className="loading-container">
@@ -68,14 +107,32 @@ const Blog = () => {
     return (
         <>
             <div className="burger-blog">
-                {/* Hero Section */}
-                <header className="hero-section">
-                    <div className="hero-overlay"></div>
-                    <div className="hero-content">
-                        <h1 className="hero-title">Burger Blog</h1>
-                        <p className="hero-subtitle">Discover the art of the perfect burger</p>
-                    </div>
-                </header>
+                {blogBanner && blogBanner.length > 0 ? (
+                    blogBanner.map((item) => (
+                        <header
+                            key={item._id}
+                            className="h-[60vh] flex items-center justify-center relative overflow-hidden bg-cover bg-center"
+                            style={{
+                                backgroundImage: `url(http://localhost:8100/BlogImage/${item.image})`
+                            }}
+                        >
+                            <div className="hero-overlay"></div>
+                            <div className="hero-content">
+                                <h1 className="hero-title">{item.heading || 'Blog Post'}</h1>
+                                <p className="hero-subtitle">
+                                    {item.paragraph || 'Read our latest blog post'}
+                                </p>
+                            </div>
+                        </header>
+                    ))
+                ) : (
+                    <header className="h-[60vh] bg-gradient-to-br from-[#ff6b35] to-[#f7931e] flex items-center justify-center relative">
+                        <div className="hero-content text-center">
+                            <h1 className="hero-title">Blog Posts</h1>
+                            <p className="hero-subtitle">Loading blog content...</p>
+                        </div>
+                    </header>
+                )}
 
                 {/* Featured Burger */}
                 <section className="featured-section">

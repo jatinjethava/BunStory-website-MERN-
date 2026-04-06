@@ -16,6 +16,7 @@ import './App.css'
 import AdminHome from './Pages/AdminHome/AdminHome';
 import NotFound from './Components/NotFound';
 import Banner from './Pages/Banner/Banner';
+import BlogBanner from './Pages/BlogBanner/BlogBanner';
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
         <Route path='/admin' element={<AdminLayout />}>
           <Route path='adminhome' element={<AdminHome />} />
           <Route path='banner' element={<Banner />} />
+          <Route path='blogbanner' element={<BlogBanner />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

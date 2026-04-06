@@ -26,8 +26,8 @@ const AdminNavbar = () => {
                         <Link to="/admin/banner" className="hover:bg-gray-700 p-2 rounded">
                             Banner
                         </Link>
-                        <Link to="/admin/orders" className="hover:bg-gray-700 p-2 rounded">
-                            Orders
+                        <Link to="/admin/blogbanner" className="hover:bg-gray-700 p-2 rounded">
+                            Blog Banner
                         </Link>
                         <Link to="/admin/users" className="hover:bg-gray-700 p-2 rounded">
                             Users

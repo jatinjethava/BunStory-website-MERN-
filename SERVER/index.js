@@ -9,6 +9,7 @@ const adminRoute = require('./Src/Routes/admin.Route');
 const userRoute = require('./Src/Routes/user.Route');
 const burgerRoute = require('./Src/Routes/burger.Route');
 const homeRoute = require("./Src/Routes/home.Route");
+const blogRoute = require("./Src/Routes/blog.Route");
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -21,34 +22,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "Src/uploads")));
 app.use('/HomeImage', express.static(path.join(__dirname, "Src/HomeImage")));
+app.use('/BlogImage', express.static(path.join(__dirname, "Src/BlogImage")));
 
 app.use('/api', adminRoute);
 app.use('/api/users', userRoute);
 app.use('/api/burgers', burgerRoute);
 app.use('/api/home', homeRoute);
-
-app.get('/images', (req, res) => {
-    const dirPath = path.join(__dirname, "Src/HomeImage");
-
-    fs.readdir(dirPath, (err, files) => {
-        if (err) {
-            return res.status(500).json({
-                success: false,
-                message: "Error reading images"
-            });
-        }
-
-        const imageUrls = files.map(file =>
-            `http://localhost:8100/HomeImage/${file}`
-        );
-
-        res.status(200).json({
-            success: true,
-            count: files.length,
-            images: imageUrls
-        });
-    });
-});
+app.use('/api/blog', blogRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
