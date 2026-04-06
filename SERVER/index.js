@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
+const fs = require("fs");
 const path = require('path');
 
 const Connection = require('./Src/Config/Connection');
@@ -25,6 +26,29 @@ app.use('/api', adminRoute);
 app.use('/api/users', userRoute);
 app.use('/api/burgers', burgerRoute);
 app.use('/api/home', homeRoute);
+
+app.get('/images', (req, res) => {
+    const dirPath = path.join(__dirname, "Src/HomeImage");
+
+    fs.readdir(dirPath, (err, files) => {
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Error reading images"
+            });
+        }
+
+        const imageUrls = files.map(file =>
+            `http://localhost:8100/HomeImage/${file}`
+        );
+
+        res.status(200).json({
+            success: true,
+            count: files.length,
+            images: imageUrls
+        });
+    });
+});
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
