@@ -55,7 +55,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchBannerData();
-    });
+    }, [token]);
 
     return (
         <div className="w-[96%] m-auto mb-20">

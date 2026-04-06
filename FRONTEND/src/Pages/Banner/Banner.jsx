@@ -18,14 +18,24 @@ const Banner = () => {
         if (!token) {
             navigate('/admin/login');
         }
-    })
+    }, [token, navigate])
 
     useEffect(() => {
-        fetchBanner();
+        if (token) {
+            fetchBanner();
+        }
     }, [token]);
 
     const fetchBanner = async () => {
         try {
+            const token = localStorage.getItem("admin_token");
+
+            if (!token) {
+                return toast.error("No token found. Please login again.", {
+                    autoClose: 1500
+                });
+            }
+
             const result = await axios.get(`http://localhost:8100/api/home/gethome`, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -80,6 +90,13 @@ const Banner = () => {
         }
 
         try {
+            const token = localStorage.getItem("admin_token");
+
+            if (!token) {
+                return toast.error("No token found. Please login again.", {
+                    autoClose: 1500
+                });
+            }
 
             const formData = new FormData();
             formData.append("header", data.header);
@@ -123,6 +140,14 @@ const Banner = () => {
 
     const DeleteBanner = async (id) => {
         try {
+            const token = localStorage.getItem("admin_token");
+
+            if (!token) {
+                return toast.error("No token found. Please login again.", {
+                    autoClose: 1500
+                });
+            }
+
             const result = await axios.delete(`http://localhost:8100/api/home/deleteHome/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
