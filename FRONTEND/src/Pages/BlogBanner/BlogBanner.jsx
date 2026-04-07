@@ -141,7 +141,7 @@ const BlogBanner = () => {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(result.data.data)
+            // console.log(result.data.data)
             if (!result) {
                 return toast.error("May Be Frontend Error. Not Blog Banner Added", {
                     autoClose: 1500
@@ -158,7 +158,7 @@ const BlogBanner = () => {
                 image: null
             })
 
-            // window.location.reload();
+            fetchBlogBanner();
 
         } catch (error) {
             const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message : "Failed To Add Blog Banner";
@@ -193,6 +193,7 @@ const BlogBanner = () => {
             toast.success("Blog Banner Deleted", {
                 autoClose: 1500
             })
+            fetchBlogBanner();
 
         } catch (error) {
             const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message : "Failed To Delete Blog Banner";

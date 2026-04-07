@@ -20,8 +20,8 @@ const AdminNavbar = () => {
                     <h2 className="text-xl font-bold mb-6">Admin Panel</h2>
 
                     <nav className="flex flex-col gap-3">
-                        <Link to="/admin" className="hover:bg-gray-700 p-2 rounded">
-                            Dashboard
+                        <Link to="/admin/adminhome" className="hover:bg-gray-700 p-2 rounded">
+                            Add Burger
                         </Link>
                         <Link to="/admin/banner" className="hover:bg-gray-700 p-2 rounded">
                             Banner

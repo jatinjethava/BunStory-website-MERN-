@@ -12,11 +12,10 @@ import AddBurger from './Pages/Burger/AddBurger'
 import SignUp from './Components/SignUp'
 import Login from './Components/Login'
 import Blog from './Pages/Blog/Blog';
-import './App.css'
-import AdminHome from './Pages/AdminHome/AdminHome';
 import NotFound from './Components/NotFound';
 import Banner from './Pages/Banner/Banner';
 import BlogBanner from './Pages/BlogBanner/BlogBanner';
+import './App.css'
 
 function App() {
 
@@ -32,14 +31,13 @@ function App() {
 
         <Route element={<UserLayout />}>
           <Route index element={<Home />} />
-          <Route path='addburger' element={<AddBurger />} />
-          <Route path='addburger/:id' element={<AddBurger />} />
           <Route path='burgerlist' element={<ShowBurger />} />
           <Route path='blog' element={<Blog />} />
         </Route>
 
         <Route path='/admin' element={<AdminLayout />}>
-          <Route path='adminhome' element={<AdminHome />} />
+          <Route path='adminhome' element={<AddBurger />} />
+          <Route path='adminhome/:id' element={<AddBurger />} />
           <Route path='banner' element={<Banner />} />
           <Route path='blogbanner' element={<BlogBanner />} />
         </Route>

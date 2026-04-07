@@ -18,7 +18,7 @@ const Home = () => {
 
     useEffect(() => {
         if (!token) {
-            navigate('/admin/login');
+            navigate('/login');
         }
     }, [token, navigate]);
 

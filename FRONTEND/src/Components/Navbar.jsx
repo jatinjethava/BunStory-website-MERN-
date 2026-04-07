@@ -34,8 +34,8 @@ const Navbar = () => {
                         <Link to="/" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Home
                         </Link>
-                        <Link to="/addBurger" className={`${custom.underLine} hover:text-red-500 duration-200`}>
-                            Add Burger
+                        <Link to="" className={`${custom.underLine} hover:text-red-500 duration-200`}>
+                            Buy Burger
                         </Link>
                         <Link to="/burgerlist" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Burger List
