@@ -14,7 +14,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
 
-    const token = localStorage.getItem("admin_token");
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         if (!token) {

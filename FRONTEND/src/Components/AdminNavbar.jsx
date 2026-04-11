@@ -32,6 +32,9 @@ const AdminNavbar = () => {
                         <Link to="/admin/users" className="hover:bg-gray-700 p-2 rounded">
                             Users
                         </Link>
+                        <Link to="/admin/orders" className="hover:bg-gray-700 p-2 rounded">
+                            Orders
+                        </Link>
                     </nav>
                 </aside>
             </div>

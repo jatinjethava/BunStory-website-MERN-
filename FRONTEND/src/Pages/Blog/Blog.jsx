@@ -12,10 +12,10 @@ const Blog = () => {
     const [fetchAllFeature, setfetchAllFeature] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const token = localStorage.getItem("admin_token");
+    const token = localStorage.getItem("token");
     useEffect(() => {
         if (!token) {
-            navigate('/admin/login')
+            navigate('/login')
         } else {
             fetchBlogBanner();
             fetchFeature();
@@ -26,7 +26,7 @@ const Blog = () => {
 
     const fetchBlogBanner = async () => {
         try {
-            const token = localStorage.getItem("admin_token");
+            const token = localStorage.getItem("token");
 
             if (!token) {
                 return toast.error("No token found. Please login again.", {
@@ -60,7 +60,7 @@ const Blog = () => {
 
     const fetchFeature = async () => {
         try {
-            const token = localStorage.getItem("admin_token");
+            const token = localStorage.getItem("token");
 
             if (!token) {
                 return toast.error("token not provided. please login again", {
@@ -94,7 +94,7 @@ const Blog = () => {
 
     const allFeature = async () => {
         try {
-            const token = localStorage.getItem("admin_token");
+            const token = localStorage.getItem("token");
 
             if (!token) {
                 return toast.error("Token not Provided. login Again", {

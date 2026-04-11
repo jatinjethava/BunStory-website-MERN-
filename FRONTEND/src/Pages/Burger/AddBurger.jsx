@@ -126,7 +126,7 @@ const AddBurger = ({ props }) => {
         }
     }
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("admin_token");
 
     useEffect(() => {
         if (!token) {

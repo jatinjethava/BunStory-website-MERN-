@@ -8,20 +8,6 @@ const ShowBurger = () => {
     const navigate = useNavigate();
     const [burger, setBurger] = useState([]);
 
-    const token = localStorage.getItem("token");
-
-    useEffect(() => {
-        if (!token) {
-            toast.error("Login First After Seen Burger Details", {
-                autoClose: 1500
-            })
-            setTimeout(() => {
-                navigate("/login");
-            }, 2000);
-            return;
-        }
-    }, [token, navigate]);
-
     const getAllBurger = async () => {
         try {
 
@@ -49,37 +35,24 @@ const ShowBurger = () => {
         }
     }
 
-    const handleUpdate = async (id) => {
-        navigate(`/addburger/${id}`);
-    }
-
-    const handleDelete = async (id) => {
-        try {
-            const result = await axios.delete(`http://localhost:8100/api/burgers/deleteBurger/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (result) {
-                toast.success("Burger Deleted Successfully", {
-                    autoClose: 1500
-                })
-                setTimeout(() => {
-                    setBurger((prev) => prev.filter((item) => item._id !== id));
-                }, 1000);
-                return;
-            }
-
-        } catch (error) {
-            const msg = error.response && error.response.data && error.response.data.message ? error.response.data.message : "may be frontend issuse";
-            toast.error(msg, { autoClose: 1500 });
-        }
-    }
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
+        if (!token) {
+            toast.error("Login First After Seen Burger Details", {
+                autoClose: 1500
+            })
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
+            return;
+        }
         getAllBurger();
-    }, [])
+    }, [token, navigate]);
+
+    const handleBuyBurger = (id) => {
+        navigate(`detail/${id}`)
+    }
 
     return (
         <>
@@ -265,14 +238,11 @@ const ShowBurger = () => {
 
                                 <div className='flex justify-between items-center mt-2'>
                                     <div>
-                                        <button
-                                            onClick={() => handleUpdate(item._id)}
-                                            className='cursor-pointer bg-green-500 px-2 py-1 rounded-lg text-white hover:bg-green-600 hover:scale-105 duration-150'>Update</button>
                                     </div>
                                     <div>
                                         <button
-                                            onClick={() => handleDelete(item._id)}
-                                            className='cursor-pointer bg-red-500 px-2 py-1 rounded-lg text-white hover:bg-red-600 hover:scale-105 duration-150'>Delete</button>
+                                            onClick={() => handleBuyBurger(item._id)}
+                                            className='cursor-pointer bg-green-500 px-2 py-1 rounded-lg text-white hover:bg-green-600 hover:scale-105 duration-150'>Buy Burger</button>
                                     </div>
                                 </div>
                             </div>

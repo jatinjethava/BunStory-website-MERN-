@@ -34,17 +34,17 @@ const Navbar = () => {
                         <Link to="/" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Home
                         </Link>
-                        <Link to="" className={`${custom.underLine} hover:text-red-500 duration-200`}>
-                            Buy Burger
-                        </Link>
                         <Link to="/burgerlist" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Burger List
+                        </Link>
+                        <Link to="/cart" className={`${custom.underLine} hover:text-red-500 duration-200`}>
+                            Cart
                         </Link>
                         <Link to="/blog" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             Blog
                         </Link>
-                        <Link to="/service" className={`${custom.underLine} hover:text-red-500 duration-200`}>
-                            Service
+                        <Link to="/myorders" className={`${custom.underLine} hover:text-red-500 duration-200`}>
+                            My Order
                         </Link>
                     </ul>
                 </div>

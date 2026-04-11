@@ -10,6 +10,8 @@ const userRoute = require('./Src/Routes/user.Route');
 const burgerRoute = require('./Src/Routes/burger.Route');
 const homeRoute = require("./Src/Routes/home.Route");
 const blogRoute = require("./Src/Routes/blog.Route");
+const cartRoute = require("./Src/Routes/cart.Route");
+const orderRoute = require("./Src/Routes/order.Route");
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -29,6 +31,8 @@ app.use('/api/users', userRoute);
 app.use('/api/burgers', burgerRoute);
 app.use('/api/home', homeRoute);
 app.use('/api/blog', blogRoute);
+app.use('/api/cart', cartRoute);
+app.use('/api/order', orderRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'))
 

@@ -15,7 +15,12 @@ import Blog from './Pages/Blog/Blog';
 import NotFound from './Components/NotFound';
 import Banner from './Pages/Banner/Banner';
 import BlogBanner from './Pages/BlogBanner/BlogBanner';
+import BurgerDetail from './Pages/Details/BurgerDetail';
 import './App.css'
+import Cart from './Pages/Cart/Cart';
+import Checkout from './Pages/Checkout/Checkout';
+import MyOrders from './Pages/Orders/MyOrders';
+import AdminOrders from './Pages/AdminOrders/AdminOrders';
 
 function App() {
 
@@ -32,7 +37,11 @@ function App() {
         <Route element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path='burgerlist' element={<ShowBurger />} />
+          <Route path='burgerlist/detail/:id' element={<BurgerDetail />} />
+          <Route path='cart' element={<Cart />} />
           <Route path='blog' element={<Blog />} />
+          <Route path='checkout' element={<Checkout />} />
+          <Route path='myorders' element={<MyOrders />} />
         </Route>
 
         <Route path='/admin' element={<AdminLayout />}>
@@ -40,6 +49,7 @@ function App() {
           <Route path='adminhome/:id' element={<AddBurger />} />
           <Route path='banner' element={<Banner />} />
           <Route path='blogbanner' element={<BlogBanner />} />
+          <Route path='orders' element={<AdminOrders />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
