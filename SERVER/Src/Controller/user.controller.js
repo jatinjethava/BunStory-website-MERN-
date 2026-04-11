@@ -86,7 +86,56 @@ const LoginUser = async (req, res) => {
 
 
 
+const getProfile = async (req, res) => {
+    try {
+        const userId = req.user;
+        const user = await USER.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const updateProfile = async (req, res) => {
+    try {
+        const userId = req.user;
+        const { name, email, password } = req.body;
+        const updateData = { name };
+        if (email) {
+            const existingUser = await USER.findOne({ email, _id: { $ne: userId } });
+            if (existingUser) {
+                return res.status(400).json({ success: false, message: "Email already in use" });
+            }
+            updateData.email = email;
+        }
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            updateData.password = await bcrypt.hash(password, salt);
+        }
+        const updatedUser = await USER.findByIdAndUpdate(userId, updateData, { new: true }).select('-password');
+        res.status(200).json({ success: true, user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        const userId = req.user;
+        await USER.findByIdAndDelete(userId);
+        res.status(200).json({ success: true, message: "Account deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 module.exports = {
     createUser,
-    LoginUser
+    LoginUser,
+    getProfile,
+    updateProfile,
+    deleteUser
 };

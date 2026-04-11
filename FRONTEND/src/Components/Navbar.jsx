@@ -46,6 +46,9 @@ const Navbar = () => {
                         <Link to="/myorders" className={`${custom.underLine} hover:text-red-500 duration-200`}>
                             My Order
                         </Link>
+                        <Link to="/profile" className={`${custom.underLine} hover:text-red-500 duration-200`}>
+                            Profile
+                        </Link>
                     </ul>
                 </div>
                 <div>
