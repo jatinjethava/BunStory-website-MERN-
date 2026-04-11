@@ -22,6 +22,7 @@ import Checkout from './Pages/Checkout/Checkout';
 import MyOrders from './Pages/Orders/MyOrders';
 import AdminOrders from './Pages/AdminOrders/AdminOrders';
 import Profile from './Pages/Profile/Profile';
+import AdminUsers from './Pages/AdminUsers/AdminUsers';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
           <Route path='banner' element={<Banner />} />
           <Route path='blogbanner' element={<BlogBanner />} />
           <Route path='orders' element={<AdminOrders />} />
+          <Route path='users' element={<AdminUsers />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

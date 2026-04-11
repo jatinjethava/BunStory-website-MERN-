@@ -26,7 +26,7 @@ app.use("/uploads", express.static(path.join(__dirname, "Src/uploads")));
 app.use('/HomeImage', express.static(path.join(__dirname, "Src/HomeImage")));
 app.use('/BlogImage', express.static(path.join(__dirname, "Src/BlogImage")));
 
-app.use('/api', adminRoute);
+app.use('/api/admin', adminRoute);
 app.use('/api/users', userRoute);
 app.use('/api/burgers', burgerRoute);
 app.use('/api/home', homeRoute);
